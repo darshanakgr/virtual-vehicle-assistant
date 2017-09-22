@@ -1,3 +1,5 @@
+
+
 var vehicleList = ['Alfa Romeo',
     'Aston Martin',
     'Audi',
@@ -90,6 +92,8 @@ $('form#register-nre-vehicle').on('submit', function (e) {
         console.log(fileList[i].name);
     }
 
+    var id = new Date().getTime()
+    var uid = firebase.auth().currentUser.uid;
     var manufacturer = $('[name=manufacturer]').val();
     var model = $('[name=model]').val();
     var year = $('[name=year]').val();
@@ -98,17 +102,18 @@ $('form#register-nre-vehicle').on('submit', function (e) {
     var millage = $('[name=millage]').val();
     var otherInformation = $('[name=other-information]').val();
     
-    var vehicle = {
+    var db = firebase.database();
+
+    db.ref().child('vehicle').child(uid).child(id).set({
         manufacturer,
         model,
         transmission,
         color,
         millage,
         otherInformation
-    };
-
-    var db = firebase.database();
-
-    db.ref().child('vehicle').child('V001').set(vehicle);
-
+    }).then(function (e) {
+        alert('Vehicle entry was successful');
+    }).catch(function (e) {
+        alert(e.message);
+    });
 });
